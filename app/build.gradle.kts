@@ -96,11 +96,11 @@ dependencies {
     implementation(libs.datastore.preferences)
 
     // Media Player
-    implementation(libs.media3.exoplayer)
-    implementation(libs.media3.ui)
-    implementation(libs.media3.common)
-    implementation(libs.media3.session)
-    implementation(libs.media3.cast)
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
+    implementation("androidx.media3:media3-session:1.3.1")
+    implementation("androidx.media3:media3-common:1.3.1")
+    implementation("androidx.media3:media3-cast:1.3.1")
 
     // Work Manager
     implementation(libs.work.runtime.ktx)
