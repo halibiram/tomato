@@ -6,8 +6,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.tomatomediacenter.presentation.ui.home.HomeScreen // Added import
 // Placeholders for Screen Composables - these would be in their respective ui packages
-// import com.tomatomediacenter.presentation.ui.home.HomeScreen
 // import com.tomatomediacenter.presentation.ui.search.SearchScreen
 // import com.tomatomediacenter.presentation.ui.player.PlayerScreen
 // import com.tomatomediacenter.presentation.ui.settings.SettingsScreen
@@ -132,32 +132,21 @@ fun TomatoNavGraph(
     ) {
         // Home Screen - Developer 15-16
         composable(Routes.HOME) {
-            // Replace with actual HomeScreen call
-            PlaceholderScreen(
-                screenName = "Home Screen",
-                onNavigateToDetails = { id ->
-                    navController.navigate(Routes.playerWithMovieId(id))
+            HomeScreen(
+                // viewModel = hiltViewModel(), // Example of Hilt VM
+                onNavigateToSearch = {
+                    navController.navigate(Routes.SEARCH)
                 },
-                onNavigateToRoute = { route ->
-                    navController.navigate(route)
+                onNavigateToPlayer = { movieId ->
+                    navController.navigate(Routes.playerWithMovieId(movieId))
+                },
+                onNavigateToDownloads = {
+                    navController.navigate(Routes.DOWNLOADS)
+                },
+                onNavigateToSettings = {
+                    navController.navigate(Routes.SETTINGS)
                 }
             )
-            // Actual call would be:
-            // HomeScreen(
-            //     // viewModel = hiltViewModel(), // Example of Hilt VM
-            //     onNavigateToSearch = {
-            //         navController.navigate(Routes.SEARCH)
-            //     },
-            //     onNavigateToPlayer = { movieId ->
-            //         navController.navigate(Routes.playerWithMovieId(movieId))
-            //     },
-            //     onNavigateToDownloads = {
-            //         navController.navigate(Routes.DOWNLOADS)
-            //     },
-            //     onNavigateToSettings = {
-            //         navController.navigate(Routes.SETTINGS)
-            //     }
-            // )
         }
 
         // Search Screen - Developer 17-18

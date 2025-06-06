@@ -31,9 +31,12 @@ fun HomeScreen() {
     // Placeholder HomeScreen content
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        // verticalArrangement = Arrangement.Center, // Removed
+        // horizontalAlignment = Alignment.CenterHorizontally // Removed
     ) {
-        Text(text = "Home Screen")
+        Text(text = "Welcome to the Home Screen!")
+        Text(text = "Item 1")
+        Text(text = "Item 2")
+        Text(text = "Item 3")
     }
 }
