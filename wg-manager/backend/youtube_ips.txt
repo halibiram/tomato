@@ -1,0 +1,19 @@
+# YouTube and Google Video IP Ranges
+# This list is focused on video content delivery networks.
+# Source: Aggregated from public BGP data and community findings.
+
+# Google Video Ranges
+173.194.0.0/16
+74.125.0.0/16
+
+# YouTube Specific Ranges (may overlap with Google Video)
+208.65.152.0/22
+208.117.224.0/19
+216.58.192.0/19
+216.239.32.0/19
+
+# Additional Google Content Delivery Networks (CDN) often used for YouTube
+172.217.0.0/16
+172.253.0.0/16
+108.177.8.0/21
+64.233.160.0/19
