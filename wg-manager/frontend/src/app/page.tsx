@@ -126,7 +126,7 @@ export default function Home() {
               </thead>
               <tbody className="divide-y divide-gray-700">
                 {clients.length > 0 ? clients.map((client) => (
-                  <tr key={client.id} className="hover:bg-gray-700/50">
+                  <tr key={client.id} className="hover:bg-gray-700/50 cursor-pointer" onClick={() => router.push(`/clients/${client.id}`)}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className={`h-2.5 w-2.5 rounded-full ${client.is_connected ? 'bg-green-500' : 'bg-red-500'}`}></div>

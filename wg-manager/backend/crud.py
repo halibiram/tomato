@@ -22,3 +22,12 @@ def create_client(db: Session, client: schemas.ClientCreate, public_key: str, pr
     db.commit()
     db.refresh(db_client)
     return db_client
+
+def update_client_status(db: Session, client_id: int, is_active: bool) -> models.ClientConfig:
+    db_client = get_client(db, client_id=client_id)
+    if not db_client:
+        return None
+    db_client.is_active = is_active
+    db.commit()
+    db.refresh(db_client)
+    return db_client

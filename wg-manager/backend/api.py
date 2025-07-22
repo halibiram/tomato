@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import PlainTextResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
@@ -94,6 +95,69 @@ def read_clients_with_status(
         enriched_clients.append(client_data)
 
     return enriched_clients
+
+@client_router.get("/{client_id}", response_model=schemas.Client)
+def read_client(client_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+    db_client = crud.get_client(db, client_id=client_id)
+    if db_client is None:
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    # Enrich with live data, similar to the list view
+    client_data = schemas.Client.from_orm(db_client)
+    live_statuses = get_peer_statuses()
+    live_info = live_statuses.get(db_client.public_key)
+    if live_info:
+        client_data.latest_handshake_at = live_info.get("latest_handshake")
+        if client_data.latest_handshake_at and (datetime.utcnow() - client_data.latest_handshake_at) < timedelta(minutes=3):
+            client_data.is_connected = True
+
+    return client_data
+
+@client_router.get("/{client_id}/config", response_class=PlainTextResponse)
+def get_client_config(client_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+    db_client = crud.get_client(db, client_id=client_id)
+    if db_client is None:
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    # This needs the server's public key and endpoint address
+    # We'll assume the endpoint is the request's host. A better way is to have it in config.
+    # For now, let's just placeholder it.
+    server_public_key = subprocess.run(["wg", "pubkey"], input=open(settings.WG_SERVER_PRIVATE_KEY_PATH).read(), capture_output=True, text=True, check=True).stdout.strip()
+    server_endpoint = "YOUR_SERVER_IP_OR_DOMAIN:51820" # This should be configured
+
+    config = f"""
+[Interface]
+PrivateKey = {db_client.private_key}
+Address = 10.0.0.{db_client.id + 1}/32
+DNS = 1.1.1.1
+
+[Peer]
+PublicKey = {server_public_key}
+PresharedKey = {db_client.preshared_key}
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = {server_endpoint}
+"""
+    return PlainTextResponse(content=config.strip())
+
+
+@client_router.put("/{client_id}/status", response_model=schemas.Client)
+def update_client_active_status(
+    client_id: int, status: bool, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)
+):
+    db_client = crud.update_client_status(db, client_id=client_id, is_active=status)
+    if not db_client:
+        raise HTTPException(status_code=404, detail="Client not found")
+
+    # Regenerate and apply config after status change
+    all_clients = crud.get_clients(db)
+    with open(settings.WG_SERVER_PRIVATE_KEY_PATH, 'r') as f:
+        server_private_key = f.read().strip()
+
+    config_content = generate_wireguard_config(all_clients, server_private_key)
+    apply_wireguard_config(config_content)
+
+    return db_client
+
 
 @client_router.post("/", response_model=schemas.Client)
 def create_client(

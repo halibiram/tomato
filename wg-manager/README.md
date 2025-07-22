@@ -77,17 +77,22 @@ After logging in, you will be greeted with a dashboard that lists all configured
 - **Data Transfer (DL / UL):** Shows the total data downloaded and uploaded by the client since the WireGuard interface was last started.
 - **Latest Handshake:** How long ago the client last communicated with the server. `Never` indicates no connection has been made.
 
-### Adding a New Client
+### Managing Clients
 
+#### Adding a New Client
 1.  Log in to the web interface.
 2.  *(Functionality to be added)* Click the "Add New Client" button.
 3.  Enter a name for the new client (e.g., `my-phone`) and click "Create".
+4.  The new client will appear in the dashboard.
 
-The backend will automatically generate keys, update the WireGuard configuration, and reload the service. The new client will appear in the dashboard.
+#### Viewing Client Details and Configuration
+1.  From the main dashboard, click on any client row.
+2.  This will take you to the **Client Detail Page**.
 
-### Configuring Your Device
-
-*(Functionality to be added)* After adding a client, you will be able to click on it to view its configuration file (`.conf`) and a QR code for easy setup on mobile devices.
+On this page, you can:
+-   **Configure Mobile Devices:** Scan the **QR Code** directly with your WireGuard mobile app for instant setup.
+-   **Configure Desktop Devices:** Copy the contents of the **Desktop Config File** text box and save it as a `.conf` file. You can then import this file into your desktop WireGuard client.
+-   **Enable/Disable a Client:** Use the "Enable" or "Disable" button to activate or deactivate a client. A disabled client cannot connect to the VPN but is not deleted from the system. This is useful for temporarily revoking access.
 
 ## Project Structure
 
